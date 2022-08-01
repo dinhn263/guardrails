@@ -1,9 +1,28 @@
 import {generateRandomAddress} from '../../support/utils'
 import {generateUniqueNumbers} from '../../support/utils'
 
+
+/**
+ * Note the reason why we have to create 2 variables: 
+ * + list_product_quantity: this will hold all product which only has quantity > 0
+ * + list_product: this will hold list products shown on web site but it will contains both product has quantity >0 and quantity=0
+ * The reason why we have to create 2 above values is: 
+ * + when website load it will triger api product/search (A) and return list of product but in this list does not contain quantity.
+ * So that we can not know which product has quantity is 0 , which has quantity >0. 
+ * If we select product has quantity = 0, it wil failed our test case. Because we dont handle the case 
+ * selected product which quantity is 0. 
+ * + However, we have other api /productQuantity (B) also return list of product but this list contain quantity.
+ * But this api does not return name.
+ * Short talk, api A does not return quantity, but return name.
+ * api B does return quantity , but not return name.
+ * that is why we create 2 variables: 
+ *    + list_product_quantity: to store list product form api B
+ *    + list_product: to store list product form api A
+ * base on these value we can get the product (name, id) has quantity >0 
+ */
 var basket_id = '';    
 var token = '';
-var list_product_quantity = [];
+var list_product_quantity = [];    
 var list_product = [];
 var list_product_add = [];
 
