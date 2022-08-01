@@ -94,3 +94,36 @@ ex: if i want to run all the test cases on production env i will use like this: 
 ex: if i want to run only the api test cases on production env i will use like this: npx cypress run --env configFile=production.config.js cypress/e2e/api
 
 ex: if i want to run only the fe test cases on production env i will use like this: npx cypress run --env configFile=production.config.js cypress/e2e/fe
+
+# V. NOTE
+Some time when you run the test case, it will be failure. 
+Usually it fail at this step
+![test case fail](./images/img13.png )
+
+the reason if failed is, some time the variable 'list_product_add' is empty.
+I AM NOT SURE WHY: the variable 'list_product_add' is empty. 
+
+First, as you know, our test case is , we login to website and input the product name (ex: name_X) to search and click add to cart. 
+
+In our test case, instead of hard_code name_X, I try to get random product name from api: 'rest/products/search?q=' (called api_A), There is an issue , the api_A only return the product name and id only, it does not return the quantity. And in case if get the product name which quantity is 0 then our test case is fail.
+
+However, we also have other api 'api/Quantitys/' (called api_B). This api return product id, quantity but does not return product name.
+
+Then the idea is:  we will get product id from api_B which quantity > 0 and assign to variable 'list_product_quantity' 
+![test case fail](./images/img14.png )
+
+Next, we will get product id from api_A  and assign to variable 'list_product' 
+![test case fail](./images/img15.png )
+
+Then, i will select random product Id from 'list_product_quantity' (for sure these product has quantity >0), after that, i will go to loop through the variable 'list_product' if the product id is match then I will add them to variable 'list_product_add'
+![test case fail](./images/img16.png )
+
+The issue is: sometime, the api_B return some product id which does not exist in api_A, that is why: it leads to the variable 'list_product_add' is emtpy. Then it makes test case failed. 
+
+
+
+
+
+
+
+
